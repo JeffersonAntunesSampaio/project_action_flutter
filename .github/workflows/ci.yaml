@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    branches:
+      - develop
+      - main
+
+jobs:
+  flutter_analyze_test:
+    name: Run Flutter Analyze and Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+
+      - name: ⚙️ Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: "17.x"
+
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter format --dry-run --set-exit-if-changed lib/
